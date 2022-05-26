@@ -18,6 +18,10 @@ import { TypeOrmModule } from '@nestjs/typeorm'
       database: process.env.POSTGRES_DB,
       entities: [],
       synchronize: false,
+      migrations: ['src/db/migrations/*.ts'],
+      cli: {
+        migrationsDir: 'src/db/migrations',
+      },
     }),
   ],
 })
