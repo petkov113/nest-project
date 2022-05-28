@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { UUID } from './decorators'
-import CreateUserDto from './dto/create-user.dto'
+import { CreateUserDto } from './dto'
 import { UserService } from './user.service'
 
 @Controller('users')
