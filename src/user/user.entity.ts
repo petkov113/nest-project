@@ -7,10 +7,8 @@ export class User extends BaseEntity {
   id!: string
 
   @Column({ unique: true })
-  @IsEmail({ message: 'email format is incorrect' })
   email!: string
 
   @Column()
-  @Length(6, 20, { message: 'password format is incorrect' })
   password!: string
 }
