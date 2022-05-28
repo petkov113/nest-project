@@ -25,7 +25,7 @@ export class UserService {
 
   async createUser(user: CreateUserDto) {
     try {
-      const newUser = await this.userRepository.save(user)
+      const newUser = await this.userRepository.insert(user)
       return newUser
     } catch {
       throw new BadRequestException('Invalid user')
