@@ -12,10 +12,10 @@ const config: TypeOrmModuleOptions = {
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  autoLoadEntities: true,
+  entities: ['dist/src/**/*.entity.js'],
   synchronize: false,
   migrationsRun: false,
-  migrations: ['src/db/migrations/*.ts'],
+  migrations: ['dist/src/db/migrations/*.js'],
   cli: {
     migrationsDir: 'src/db/migrations',
   },
