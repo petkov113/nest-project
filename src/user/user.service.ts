@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { UUID } from './decorators'
+import CreateUserDto from './dto/create-user.dto'
 import { User } from './user.entity'
 
 @Injectable()
@@ -20,5 +21,14 @@ export class UserService {
       throw new BadRequestException('Invalid user')
     }
     return user
+  }
+
+  async createUser(user: CreateUserDto) {
+    try {
+      const newUser = await this.userRepository.save(user)
+      return newUser
+    } catch {
+      throw new BadRequestException('Invalid user')
+    }
   }
 }
