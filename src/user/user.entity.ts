@@ -1,4 +1,4 @@
-import { IsEmail, Length } from 'class-validator'
+import { Exclude } from 'class-transformer'
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity({ name: 'users' })
@@ -10,5 +10,11 @@ export class User extends BaseEntity {
   email!: string
 
   @Column()
+  @Exclude()
   password!: string
+
+  constructor(partial: Partial<User>) {
+    super()
+    Object.assign(this, partial)
+  }
 }
