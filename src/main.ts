@@ -23,11 +23,7 @@ async function bootstrap() {
     })
   }
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      disableErrorMessages: isProd,
-    }),
-  )
+  app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: isProd }))
 
   await app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
 }

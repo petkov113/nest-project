@@ -22,8 +22,8 @@ export class UserController {
   }
 
   @UseInterceptors(ClassSerializerInterceptor)
-  @Get('/:id')
-  get(@Param('id') id: UUID) {
+  @Get(':id')
+  get(@Param() id: UUID) {
     return this.usersService.getUser(id)
   }
 
