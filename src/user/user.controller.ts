@@ -15,14 +15,14 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private usersService: UserService) {}
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   getAll() {
     return this.usersService.getUsers()
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get(':id')
+  @UseInterceptors(ClassSerializerInterceptor)
   get(@Param() id: UUID) {
     return this.usersService.getUser(id)
   }

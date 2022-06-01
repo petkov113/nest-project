@@ -1,9 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import * as bcrypt from 'bcrypt'
 import { UUID } from './decorators'
 import { CreateUserDto } from './dto'
 import { User } from './user.entity'
+
+const saltRounds = 10
 
 @Injectable()
 export class UserService {
@@ -23,13 +26,20 @@ export class UserService {
     return user
   }
 
-  async createUser(userDto: CreateUserDto) {
-    try {
-      const user = this.userRepository.create(userDto)
-      await this.userRepository.insert(user)
-      return user
-    } catch {
-      throw new BadRequestException('Invalid user')
+  async createUser({ email, password }: CreateUserDto) {
+    const exists = Boolean(await this.userRepository.findOne({ email }))
+    if (exists) {
+      throw new BadRequestException('Account with this email already exists.')
+    } else {
+      try {
+        const hashedPass = await bcrypt.hash(password, saltRounds)
+        await this.userRepository.insert({ email, password: hashedPass })
+        const user = await this.userRepository.findOne({ email })
+
+        return user.id
+      } catch (error) {
+        throw new BadRequestException(error)
+      }
     }
   }
 }
