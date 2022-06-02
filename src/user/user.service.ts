@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  NotFoundException,
+  Injectable,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import * as bcrypt from 'bcrypt'
@@ -12,8 +16,8 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  getUsers() {
-    return this.userRepository.find()
+  async getUsers() {
+    return await this.userRepository.find()
   }
 
   async getUser(id: UUID) {
@@ -29,14 +33,10 @@ export class UserService {
     if (exists) {
       throw new BadRequestException('Account with this email already exists.')
     } else {
-      try {
-        const hashedPass = await bcrypt.hash(password, 10)
-        await this.userRepository.insert({ email, password: hashedPass })
-        const user = await this.userRepository.findOne({ email })
-        return user.id
-      } catch (error) {
-        throw new BadRequestException(error)
-      }
+      const hashedPass = await bcrypt.hash(password, 10)
+      await this.userRepository.insert({ email, password: hashedPass })
+      const user = await this.userRepository.findOne({ email })
+      return user.id
     }
   }
 
@@ -45,15 +45,13 @@ export class UserService {
 
     const userExists = Boolean(await this.userRepository.findOne(id))
     if (!userExists) {
-      throw new BadRequestException("User doesn't exist")
+      throw new NotFoundException('User not found')
     }
 
-    const emailExists =
-      email && Boolean(await this.userRepository.findOne({ email }))
-    if (emailExists) {
-      throw new BadRequestException('This email is already registered')
+    try {
+      await this.userRepository.update(id, partialUser)
+    } catch (error) {
+      throw new BadRequestException('Email already exists')
     }
-
-    this.userRepository.update(id, partialUser)
   }
 }
