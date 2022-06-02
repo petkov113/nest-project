@@ -41,8 +41,6 @@ export class UserService {
   }
 
   async updateUser(id: UUID, partialUser: UpdateUserDto) {
-    const { email } = partialUser
-
     const userExists = Boolean(await this.userRepository.findOne(id))
     if (!userExists) {
       throw new NotFoundException('User not found')
